@@ -1,0 +1,7 @@
+# bug in werkzeug for docker, use below version
+werkzeug==0.14.1
+Flask==1.0.2
+Flask-RESTful
+Flask-SQLAlchemy==2.3.2
+psycopg2-binary==2.7.6.1
+Flask-Testing==0.7.1
