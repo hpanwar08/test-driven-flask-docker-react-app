@@ -171,6 +171,18 @@ class TestUserService(BaseTestCase):
             self.assertIn(b'Captian American', response.data)
             self.assertIn(b'Ant Man', response.data)
 
+    def test_main_add_user(self):
+        with self.client:
+            response = self.client.post(
+                '/',
+                data=dict(username='Iron Man', email='ironman@avengers.com'),
+                follow_redirects=True
+                )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'All Users', response.data)
+            self.assertNotIn(b'<p>No users!</p>', response.data)
+            self.assertIn(b'Iron Man', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()
