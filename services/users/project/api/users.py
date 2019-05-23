@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from flask_restful import Resource, Api
 from sqlalchemy import exc
 
@@ -6,8 +6,19 @@ from project.api.models import User
 from project import db
 
 
-users_blueprint = Blueprint('users', __name__)
+users_blueprint = Blueprint('users', __name__, template_folder='./templates')
 api = Api(users_blueprint)
+
+
+@users_blueprint.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        db.session.add(User(username=username, email=email))
+        db.session.commit()
+    users = User.query.all()
+    return render_template('index.html', users=users)
 
 
 class UsersPing(Resource):
@@ -44,20 +55,37 @@ class UsersList(Resource):
             db.session.rollback()
             return response_body, 400
 
+    def get(self):
+        users = User.query.all()
+        response_body = {
+            'status': 'success',
+            'data': [user.to_json() for user in users]
+        }
+        return response_body, 200
+
 
 class Users(Resource):
     def get(self, user_id):
-        user = User.query.filter_by(id=user_id).first()
-        if user:
-            response_body = {
-                'status': 'success',
-                'data': {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email
+        response_body = {
+            'status': 'fail',
+            'message': 'User does not exists'
+        }
+        try:
+            user = User.query.filter_by(id=int(user_id)).first()
+            if user:
+                response_body = {
+                    'status': 'success',
+                    'data': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email
+                        }
                     }
-                }
-            return response_body, 200
+                return response_body, 200
+            else:
+                return response_body, 404
+        except ValueError:
+            return response_body, 404
 
 
 api.add_resource(UsersPing, '/users/ping')

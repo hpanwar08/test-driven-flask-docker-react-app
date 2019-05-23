@@ -1,5 +1,6 @@
 __pycache__
 venv
+htmlcov/
 .vscode
 .dockerignore
 .pytest_cache

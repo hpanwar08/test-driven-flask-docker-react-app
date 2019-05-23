@@ -101,7 +101,7 @@ class TestUserService(BaseTestCase):
                 data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_get_single_user(self):
+    def test_single_user(self):
         """Ensure a single user is returned by id
         """
         user = add_user('Dr. Strange', 'drstrange@avenger.com')
@@ -112,6 +112,64 @@ class TestUserService(BaseTestCase):
             self.assertIn('Dr. Strange', data['data']['username'])
             self.assertIn('drstrange@avenger.com', data['data']['email'])
             self.assertIn('success', data['status'])
+
+    def test_single_user_no_id(self):
+        """Ensure correct message is returned when no userid
+        """
+        with self.client:
+            response = self.client.get(f'/user/abc')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('User does not exists', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_single_user_invalid_id(self):
+        """Ensure correct message is returned when invalid userid
+        """
+        with self.client:
+            response = self.client.get(f'/user/999999')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('User does not exists', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_all_users(self):
+        """Ensure all users are returned
+        """
+        add_user('Captian American', 'cptamerica@avenger.com')
+        add_user('Ant Man', 'antman@avenger.com')
+
+        with self.client:
+            response = self.client.get('/users')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Captian American', data['data'][0]['username'])
+            self.assertIn('cptamerica@avenger.com', data['data'][0]['email'])
+            self.assertIn('Ant Man', data['data'][1]['username'])
+            self.assertIn('antman@avenger.com', data['data'][1]['email'])
+            self.assertIn('success', data['status'])
+
+    def test_main_no_users(self):
+        """Ensure correct html is displayed when no users
+        """
+        with self.client:
+            response = self.client.get('/')
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'All Users', response.data)
+            self.assertIn(b'<p>No users!</p>', response.data)
+
+    def test_main_with_users(self):
+        """Ensure correct html is displayed when there are users
+        """
+        add_user(username='Captian American', email='cptamerica@avenger.com')
+        add_user(username='Ant Man', email='antman@avenger.com')
+        with self.client:
+            response = self.client.get('/')
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'All Users', response.data)
+            self.assertNotIn(b'<p>No users!</p>', response.data)
+            self.assertIn(b'Captian American', response.data)
+            self.assertIn(b'Ant Man', response.data)
 
 
 if __name__ == '__main__':
