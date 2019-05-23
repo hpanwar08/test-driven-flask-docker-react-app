@@ -26,4 +26,3 @@ COPY . /usr/src/app
 # CMD python manage.py run -h 0.0.0.0
 CMD ["/usr/src/app/entrypoint.sh"]
 # ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]
-# RUN ["chmod", "+x", "/usr/src/app/entrypoint.sh"]
