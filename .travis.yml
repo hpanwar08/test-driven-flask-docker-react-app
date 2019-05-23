@@ -4,7 +4,7 @@ services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.23.2
+  DOCKER_COMPOSE_VERSION: 1.20.1
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -13,12 +13,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose build
-  - docker-compose up -d
+  - docker-compose -f docker-compose.yml up --build -d
 
 script:
-  - docker-compose exec users python manage.py test
-  - docker-compose exec users flake8 project
+  - docker-compose -f docker-compose.yml exec users python manage.py test
+  - docker-compose -f docker-compose.yml exec users flake8 project
 
 after_script:
  - docker-compose down
