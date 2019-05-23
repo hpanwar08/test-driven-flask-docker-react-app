@@ -13,11 +13,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose -f docker-compose.yml up -d --build
+  - docker-compose up -d --build
 
 script:
-  - docker-compose -f docker-compose.yml exec users python manage.py test
-  - docker-compose -f docker-compose.yml exec users flake8 project
+  - docker-compose exec users python manage.py test
+  - docker-compose exec users flake8 project
 
 after_script:
  - docker-compose down
