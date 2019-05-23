@@ -13,8 +13,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose -f docker-compose.yml build
-  - docker-compose -f docker-compose.yml up -d
+  - docker-compose -f docker-compose.yml up -d --build
   - sleep 10
 
 script:
