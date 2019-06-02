@@ -143,10 +143,10 @@ class TestUserService(BaseTestCase):
             response = self.client.get('/users')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn('Captian American', data['data'][0]['username'])
-            self.assertIn('cptamerica@avenger.com', data['data'][0]['email'])
-            self.assertIn('Ant Man', data['data'][1]['username'])
-            self.assertIn('antman@avenger.com', data['data'][1]['email'])
+            self.assertIn('Captian American', data['users'][0]['username'])
+            self.assertIn('cptamerica@avenger.com', data['users'][0]['email'])
+            self.assertIn('Ant Man', data['users'][1]['username'])
+            self.assertIn('antman@avenger.com', data['users'][1]['email'])
             self.assertIn('success', data['status'])
 
     def test_main_no_users(self):
