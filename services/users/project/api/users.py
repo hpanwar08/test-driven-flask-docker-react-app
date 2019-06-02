@@ -59,7 +59,7 @@ class UsersList(Resource):
         users = User.query.all()
         response_body = {
             'status': 'success',
-            'data': [user.to_json() for user in users]
+            'users': [user.to_json() for user in users]
         }
         return response_body, 200
 
