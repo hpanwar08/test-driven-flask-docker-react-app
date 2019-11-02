@@ -1,5 +1,5 @@
 # bug in werkzeug for docker, use below version
-werkzeug==0.14.1
+werkzeug==0.15.3
 Flask==1.0.2
 Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.3.2
